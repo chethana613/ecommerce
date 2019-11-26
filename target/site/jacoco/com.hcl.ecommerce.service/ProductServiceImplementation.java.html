@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductServiceImplementation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ecommerce</a> &gt; <a href="index.source.html" class="el_package">com.hcl.ecommerce.service</a> &gt; <span class="el_source">ProductServiceImplementation.java</span></div><h1>ProductServiceImplementation.java</h1><pre class="source lang-java linenums">package com.hcl.ecommerce.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hcl.ecommerce.constants.ProductConstants;
+import com.hcl.ecommerce.dto.ProductRequestdto;
+import com.hcl.ecommerce.dto.ProductResponse;
+import com.hcl.ecommerce.dto.ProductResponsedto;
+import com.hcl.ecommerce.entity.Product;
+import com.hcl.ecommerce.exception.ProductException;
+import com.hcl.ecommerce.repository.ProductRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 
+ * @author Chethana M
+ * @Description This class is used to perform the product related operations
+ *
+ */
+@Service
+<span class="fc" id="L28">@Slf4j</span>
+<span class="fc" id="L29">public class ProductServiceImplementation implements ProductService {</span>
+
+	@Autowired
+	ProductRepository productRepository;
+
+	/**
+	 * 
+	 * @Description This method lets the admin to add a new product into the
+	 *              ecommerce application
+	 * @param productRequestdto
+	 * @return ProductResponsedto
+	 * @exception PRODUCT_EXISTS
+	 * 
+	 */
+	public Optional&lt;ProductResponsedto&gt; addNewProduct(ProductRequestdto productRequestdto) {
+<span class="fc" id="L44">		log.info(&quot;Entering into addNewProduct of ProductServiceImplementation&quot;);</span>
+<span class="fc" id="L45">		Optional&lt;Product&gt; productDetails = productRepository</span>
+<span class="fc" id="L46">				.findByProductNameAndCategory(productRequestdto.getProductName(), productRequestdto.getCategory());</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		if (productDetails.isPresent()) {</span>
+<span class="fc" id="L48">			log.error(&quot;Exception in addNewProduct of ProductServiceImplementation:&quot; + ProductConstants.PRODUCT_EXISTS);</span>
+<span class="fc" id="L49">			throw new ProductException(ProductConstants.PRODUCT_EXISTS);</span>
+		}
+<span class="fc" id="L51">		Product product = new Product();</span>
+<span class="fc" id="L52">		product.setCategory(productRequestdto.getCategory());</span>
+<span class="fc" id="L53">		product.setPrice(productRequestdto.getPrice());</span>
+<span class="fc" id="L54">		product.setProductName(productRequestdto.getProductName());</span>
+<span class="fc" id="L55">		productRepository.save(product);</span>
+<span class="fc" id="L56">		ProductResponsedto productResponsedto = new ProductResponsedto();</span>
+<span class="fc" id="L57">		return Optional.of(productResponsedto);</span>
+
+	}
+
+	/**
+	 * @Description This method gets all the product details available in the
+	 *              ecommerce application that matches with the requested product
+	 *              name pattern
+	 * @param productName
+	 * @return ProductResponse
+	 */
+	public Optional&lt;List&lt;ProductResponse&gt;&gt; getAllAvailableProducts(String productName) {
+<span class="fc" id="L69">		log.info(&quot;Entering into getAllAvailableProducts of ProductServiceImplementation&quot;);</span>
+<span class="fc" id="L70">		List&lt;Product&gt; productDetails = productRepository.findByProductNameContaining(productName);</span>
+<span class="fc" id="L71">		List&lt;ProductResponse&gt; productResponseList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">		for (Product product : productDetails) {</span>
+<span class="fc" id="L73">			ProductResponse productResponse = new ProductResponse();</span>
+<span class="fc" id="L74">			BeanUtils.copyProperties(product, productResponse);</span>
+<span class="fc" id="L75">			productResponseList.add(productResponse);</span>
+<span class="fc" id="L76">		}</span>
+
+<span class="fc" id="L78">		return Optional.of(productResponseList);</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

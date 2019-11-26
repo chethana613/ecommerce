@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StoreServiceImplementation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ecommerce</a> &gt; <a href="index.source.html" class="el_package">com.hcl.ecommerce.service</a> &gt; <span class="el_source">StoreServiceImplementation.java</span></div><h1>StoreServiceImplementation.java</h1><pre class="source lang-java linenums">package com.hcl.ecommerce.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hcl.ecommerce.constants.StoreConstants;
+import com.hcl.ecommerce.dto.StoreRequestdto;
+import com.hcl.ecommerce.dto.StoreResponsedto;
+import com.hcl.ecommerce.entity.Store;
+import com.hcl.ecommerce.exception.StoreException;
+import com.hcl.ecommerce.repository.StoreRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 
+ * @author Chethana M
+ * @Description This class is used to perform the Store related operations
+ *
+ */
+@Service
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public class StoreServiceImplementation implements StoreService {</span>
+	@Autowired
+	StoreRepository storeRepository;
+
+	/**
+	 * 
+	 * @Description This method lets the admin to add a new Store to sell product
+	 *              into the ecommerce application
+	 * @param storeRequestdto
+	 * @return StoreResponsedto
+	 * @exception STORE_EXISTS
+	 * 
+	 */
+	public Optional&lt;StoreResponsedto&gt; addNewStore(StoreRequestdto storeRequestdto) {
+<span class="fc" id="L39">		log.info(&quot;Entering into addNewStore of StoreServiceImplementation&quot;);</span>
+<span class="fc" id="L40">		Optional&lt;Store&gt; storeDetails = storeRepository.findByStoreNameAndLocation(storeRequestdto.getStoreName(),</span>
+<span class="fc" id="L41">				storeRequestdto.getLocation());</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">		if (storeDetails.isPresent()) {</span>
+<span class="fc" id="L43">			log.error(&quot;Exception in addNewStore of StoreServiceImplementation:&quot; + StoreConstants.STORE_EXISTS);</span>
+<span class="fc" id="L44">			throw new StoreException(StoreConstants.STORE_EXISTS);</span>
+		}
+<span class="fc" id="L46">		Store store = new Store();</span>
+<span class="fc" id="L47">		store.setLocation(storeRequestdto.getLocation());</span>
+<span class="fc" id="L48">		store.setStoreName(storeRequestdto.getStoreName());</span>
+<span class="fc" id="L49">		storeRepository.save(store);</span>
+<span class="fc" id="L50">		StoreResponsedto storeResponsedto = new StoreResponsedto();</span>
+<span class="fc" id="L51">		return Optional.of(storeResponsedto);</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

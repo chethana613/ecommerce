@@ -1,0 +1,10 @@
+com\hcl\ecommerce\controller\ProductControllerTest.class
+com\hcl\ecommerce\service\LoginServiceImplementationTest.class
+com\hcl\ecommerce\service\StoreServiceImplementationTest.class
+com\hcl\ecommerce\controller\LoginControllerTest.class
+com\hcl\ecommerce\service\ProductStoreServiceImplementationTest.class
+com\hcl\ecommerce\service\ProductServiceImplementationTest.class
+com\hcl\ecommerce\EcommerceApplicationTests.class
+com\hcl\ecommerce\service\ProductPurchaseDetailsImplementationTest.class
+com\hcl\ecommerce\controller\StoreControllerTest.class
+com\hcl\ecommerce\controller\ProductStoreControllerTest.class
